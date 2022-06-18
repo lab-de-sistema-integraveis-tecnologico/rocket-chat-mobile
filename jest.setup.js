@@ -13,6 +13,9 @@ jest.mock('react-native-mmkv-storage', () => ({
 			withEncryption: jest.fn().mockImplementation(() => ({
 				initialize: jest.fn()
 			}))
+		})),
+		withInstanceID: jest.fn().mockImplementation(() => ({
+			initialize: jest.fn()
 		}))
 	})),
 	create: jest.fn(),
@@ -58,4 +61,49 @@ jest.mock('react-native-notifications', () => ({
 			registerNotificationOpened: jest.fn()
 		})
 	}
+}));
+
+jest.mock('react-native-track-player', () => ({
+	__esModule: true,
+	default: {
+		addEventListener: () => ({
+			remove: jest.fn()
+		}),
+		registerEventHandler: jest.fn(),
+		registerPlaybackService: jest.fn(),
+		setupPlayer: jest.fn(),
+		destroy: jest.fn(),
+		updateOptions: jest.fn(),
+		reset: jest.fn(),
+		add: jest.fn(),
+		remove: jest.fn(),
+		skip: jest.fn(),
+		skipToNext: jest.fn(),
+		skipToPrevious: jest.fn(),
+		removeUpcomingTracks: jest.fn(),
+		play: jest.fn(),
+		pause: jest.fn(),
+		stop: jest.fn(),
+		seekTo: jest.fn(),
+		setVolume: jest.fn(),
+		setRate: jest.fn(),
+		getQueue: jest.fn(),
+		getTrack: jest.fn(),
+		getCurrentTrack: jest.fn(),
+		getVolume: jest.fn(),
+		getDuration: jest.fn(),
+		getPosition: jest.fn(),
+		getBufferedPosition: jest.fn(),
+		getState: jest.fn(),
+		getRate: jest.fn()
+	},
+	useProgress: () => ({
+		position: 100
+	})
+}));
+
+jest.mock('./app/containers/message/Components/Audio/tracksStorage.ts', () => ({
+	useTracks: () => ({
+		currentTrack: ''
+	})
 }));
