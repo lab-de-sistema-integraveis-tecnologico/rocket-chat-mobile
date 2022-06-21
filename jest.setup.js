@@ -103,7 +103,5 @@ jest.mock('react-native-track-player', () => ({
 }));
 
 jest.mock('./app/containers/message/Components/Audio/tracksStorage.ts', () => ({
-	useTracks: () => ({
-		currentTrack: ''
-	})
+	useTracks: () => ['', jest.fn()]
 }));
