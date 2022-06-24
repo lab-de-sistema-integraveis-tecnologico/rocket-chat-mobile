@@ -9,6 +9,7 @@ import { themes } from '../../lib/constants';
 import { TSupportedThemes, withTheme } from '../../theme';
 import styles from './styles';
 import { IApplicationState } from '../../definitions';
+import { EventTypes } from '../../containers/EmojiPicker/interfaces';
 
 const margin = isAndroid ? 40 : 20;
 const maxSize = 400;
@@ -31,12 +32,13 @@ class ReactionPicker extends React.Component<IReactionPickerProps> {
 		return nextProps.show !== show || width !== nextProps.width || height !== nextProps.height;
 	}
 
-	onEmojiSelected = (emoji: string, shortname?: string) => {
+	onEmojiSelected = (_eventType: EventTypes, emoji?: string, shortname?: string) => {
 		// standard emojis: `emoji` is unicode and `shortname` is :joy:
 		// custom emojis: only `emoji` is returned with shortname type (:joy:)
 		// to set reactions, we need shortname type
 		const { onEmojiSelected, message } = this.props;
 		if (message) {
+			// @ts-ignore
 			onEmojiSelected(shortname || emoji, message.id);
 		}
 	};
@@ -70,7 +72,7 @@ class ReactionPicker extends React.Component<IReactionPickerProps> {
 						}
 					]}
 					testID='reaction-picker'>
-					<EmojiPicker theme={theme} onEmojiSelected={this.onEmojiSelected} baseUrl={baseUrl} />
+					<EmojiPicker onItemClicked={this.onEmojiSelected} baseUrl={baseUrl} />
 				</View>
 			</Modal>
 		) : null;
