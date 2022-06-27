@@ -55,7 +55,7 @@ const EmojiPicker = React.memo(({ baseUrl, onItemClicked, tabEmojiStyle }: IEmoj
 				const content = emoji;
 				_addFrequentlyUsed({ content, isCustom: false });
 				const shortname = `:${emoji}:`;
-				onItemClicked(EventTypes.EMOJI_PRESSED, shortnameToUnicode(shortname), shortname);
+				onItemClicked(EventTypes.EMOJI_PRESSED, shortnameToUnicode(shortname));
 			}
 		} catch (e) {
 			log(e);
@@ -130,8 +130,6 @@ const EmojiPicker = React.memo(({ baseUrl, onItemClicked, tabEmojiStyle }: IEmoj
 		);
 	};
 
-	const onBackspacePressed = () => onItemClicked(EventTypes.BACKSPACE_PRESSED);
-
 	if (!show) {
 		return null;
 	}
@@ -153,7 +151,10 @@ const EmojiPicker = React.memo(({ baseUrl, onItemClicked, tabEmojiStyle }: IEmoj
 						: renderCategory(tab.category, i, tab.tabLabel, tabsCount)
 				)}
 			</ScrollableTabView>
-			<Footer onBackspacePressed={onBackspacePressed} />
+			<Footer
+				onSearchPressed={() => onItemClicked(EventTypes.SEARCH_PRESSED)}
+				onBackspacePressed={() => onItemClicked(EventTypes.BACKSPACE_PRESSED)}
+			/>
 		</View>
 	);
 });
