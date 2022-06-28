@@ -10,6 +10,7 @@ export interface IEmojiPickerProps {
 	baseUrl: string;
 	onItemClicked: (event: EventTypes, emoji?: string) => void;
 	tabEmojiStyle?: StyleProp<TextStyle>;
+	isEmojiKeyboard?: boolean;
 }
 
 export interface IFooterProps {
