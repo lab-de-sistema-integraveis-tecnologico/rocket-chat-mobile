@@ -931,6 +931,10 @@ class MessageBox extends Component<IMessageBoxProps, IMessageBoxState> {
 		this.setState({ showEmojiKeyboard: false });
 	};
 
+	closeEmojiSearchbar = () => {
+		this.setState({ showEmojiSearchbar: false });
+	};
+
 	submit = async () => {
 		const { tshow } = this.state;
 		const { onSubmit, rid: roomId, tmid, showSend, sharing } = this.props;
@@ -1226,6 +1230,7 @@ class MessageBox extends Component<IMessageBoxProps, IMessageBoxState> {
 					defaultValue=''
 					multiline
 					testID={`messagebox-input${tmid ? '-thread' : ''}`}
+					onFocus={this.closeEmojiSearchbar}
 					{...isAndroidTablet}
 				/>
 				<RightButtons
