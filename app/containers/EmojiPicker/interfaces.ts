@@ -1,5 +1,7 @@
 import { StyleProp, TextStyle } from 'react-native';
 
+import { IEmoji } from '../../definitions';
+
 export enum EventTypes {
 	EMOJI_PRESSED = 'emojiPressed',
 	BACKSPACE_PRESSED = 'backspacePressed',
@@ -8,9 +10,11 @@ export enum EventTypes {
 
 export interface IEmojiPickerProps {
 	baseUrl: string;
-	onItemClicked: (event: EventTypes, emoji?: string) => void;
+	onItemClicked: (event: EventTypes, emoji?: string, shortname?: string) => void;
 	tabEmojiStyle?: StyleProp<TextStyle>;
 	isEmojiKeyboard?: boolean;
+	searching?: boolean;
+	searchedEmojis?: (string | IEmoji)[];
 }
 
 export interface IFooterProps {

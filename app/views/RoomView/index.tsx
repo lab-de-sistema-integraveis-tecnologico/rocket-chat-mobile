@@ -100,6 +100,7 @@ import {
 	hasPermission
 } from '../../lib/methods/helpers';
 import { Services } from '../../lib/services';
+import { TActionSheetOptions, withActionSheet } from '../../containers/ActionSheet';
 
 type TStateAttrsUpdate = keyof IRoomViewState;
 
@@ -169,6 +170,8 @@ interface IRoomViewProps extends IBaseScreen<ChatsStackParamList, 'RoomView'> {
 	transferLivechatGuestPermission?: string[]; // TODO: Check if its the correct type
 	viewCannedResponsesPermission?: string[]; // TODO: Check if its the correct type
 	livechatAllowManualOnHold?: boolean;
+	showActionSheet?: (options: TActionSheetOptions) => void;
+	hideActionSheet?: () => void;
 }
 
 interface IRoomViewState {
@@ -847,12 +850,32 @@ class RoomView extends React.Component<IRoomViewProps, IRoomViewState> {
 		this.setState({ selectedMessage: undefined, replying: false, replyWithMention: false });
 	};
 
+	showReactionPicker = () => {
+		const { showActionSheet, width, height } = this.props;
+		const { reacting, selectedMessage } = this.state;
+		showActionSheet &&
+			showActionSheet({
+				children: (
+					<ReactionPicker
+						show={reacting}
+						message={selectedMessage}
+						onEmojiSelected={this.onReactionPress}
+						reactionClose={this.onReactionClose}
+						width={width}
+						height={height}
+					/>
+				),
+				snaps: [400, '100%']
+			});
+	};
+
 	onReactionInit = (message: TAnyMessageModel) => {
-		this.setState({ selectedMessage: message, reacting: true });
+		this.setState({ selectedMessage: message }, this.showReactionPicker);
 	};
 
 	onReactionClose = () => {
-		this.setState({ selectedMessage: undefined, reacting: false });
+		const { hideActionSheet } = this.props;
+		this.setState({ selectedMessage: undefined, reacting: false }, hideActionSheet);
 	};
 
 	onMessageLongPress = (message: TAnyMessageModel) => {
@@ -1492,8 +1515,8 @@ class RoomView extends React.Component<IRoomViewProps, IRoomViewState> {
 
 	render() {
 		console.count(`${this.constructor.name}.render calls`);
-		const { room, reactionsModalVisible, selectedMessage, loading, reacting, showingBlockingLoader } = this.state;
-		const { user, baseUrl, theme, navigation, Hide_System_Messages, width, height, serverVersion } = this.props;
+		const { room, reactionsModalVisible, selectedMessage, loading, showingBlockingLoader } = this.state;
+		const { user, baseUrl, theme, navigation, Hide_System_Messages, width, serverVersion } = this.props;
 		const { rid, t } = room;
 		let sysMes;
 		let bannerClosed;
@@ -1525,15 +1548,6 @@ class RoomView extends React.Component<IRoomViewProps, IRoomViewState> {
 				/>
 				{this.renderFooter()}
 				{this.renderActions()}
-				<ReactionPicker
-					show={reacting}
-					message={selectedMessage}
-					onEmojiSelected={this.onReactionPress}
-					reactionClose={this.onReactionClose}
-					width={width}
-					height={height}
-					theme={theme}
-				/>
 				<UploadProgress rid={rid} user={user} baseUrl={baseUrl} width={width} />
 				<ReactionsModal
 					message={selectedMessage}
@@ -1568,4 +1582,4 @@ const mapStateToProps = (state: IApplicationState) => ({
 	livechatAllowManualOnHold: state.settings.Livechat_allow_manual_on_hold as boolean
 });
 
-export default connect(mapStateToProps)(withDimensions(withTheme(withSafeAreaInsets(RoomView))));
+export default connect(mapStateToProps)(withDimensions(withTheme(withSafeAreaInsets(withActionSheet(RoomView)))));

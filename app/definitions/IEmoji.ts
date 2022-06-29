@@ -37,6 +37,7 @@ export interface IEmojiCategory {
 	style: StyleProp<ImageStyle>;
 	tabLabel: string;
 	tabsCount: number;
+	isBottomSheet: boolean;
 }
 
 export type TGetCustomEmoji = (name: string) => any;
